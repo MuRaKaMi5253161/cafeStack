@@ -11,12 +11,6 @@ struct MainContent: View {
     var body: some View {
         VStack {
             UserLine()
-            VStack {
-                Cafes()
-                Cafes()
-                Cafes()
-                Cafes()
-            }.padding()
             UnderMenuLine()
         }.background(Color.baseColor1)
     }

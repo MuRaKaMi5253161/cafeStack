@@ -10,15 +10,16 @@ import SwiftUI
 struct Cafes: View {
         @State var numberOfTasks = 0
         @State var showList = false
+        @State private var images: Data
+        @ObservedObject var cafeEntityModel: CafeEntityModel
         @Environment(\.managedObjectContext) var viewContext
         
         
         var body: some View {
             // 画面の横幅を取得
             let bounds = UIScreen.main.bounds
-            
-            return VStack(alignment: .leading) {
-                Spacer()
+            HStack() {
+                
             }
             
             .frame(width: bounds.width / 1.05, height: bounds.height / 6)
@@ -32,8 +33,7 @@ struct Cafes: View {
 struct Cafes_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            Cafes()
-            Cafes()
+           
         }
     }
 }
