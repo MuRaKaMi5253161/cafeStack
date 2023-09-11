@@ -34,7 +34,9 @@ struct UnderMenuLine: View {
                     self.showList = true
                 }
                 .sheet(isPresented: $showList) {
-                    AddNewCafe(cafeEntityModel: CafeEntityModel()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//                    AddNewCafe(CafeEntityModel: Model_cafeEntity()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//                        .environment(\.managedObjectContext, self.viewContext)
+                    AddNewCafe()
                         .environment(\.managedObjectContext, self.viewContext)
                 }
             Image(systemName

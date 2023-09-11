@@ -11,6 +11,7 @@ struct UserSettingForm: View {
     
     @State var userName: String = ""
     @State var date = Date()
+    @State private var isPresented: Bool = false
     
     var body: some View {
         
@@ -52,7 +53,7 @@ struct UserSettingForm: View {
                            
                         
                         Button(action: {
-                    
+                            isPresented = true
                         }) {
                             Text("アプリを始める")
                                 .fontWeight(.semibold)
@@ -65,6 +66,8 @@ struct UserSettingForm: View {
                                         .stroke(Color.white, lineWidth: 1.0)
                                 )
                                 .padding(.bottom, 50)
+                        }.fullScreenCover(isPresented: $isPresented) { //フルスクリーンの画面遷移
+                            MainContent()
                         }
                     }
                 }

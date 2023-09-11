@@ -8,16 +8,24 @@
 import SwiftUI
 
 struct MainContent: View {
+    @Environment(\.managedObjectContext) var viewContext
     var body: some View {
         VStack {
             UserLine()
+            Cafes()
+                .environment(\.managedObjectContext, self.viewContext)
             UnderMenuLine()
-        }.background(Color.baseColor1)
+        }
     }
 }
 
 struct MainContent_Previews: PreviewProvider {
+    static let container = PersistenceController.shared.container
+    static let context = container.viewContext
+    
     static var previews: some View {
-        MainContent()
+        
+        return MainContent()
+            .environment(\.managedObjectContext, context)
     }
 }

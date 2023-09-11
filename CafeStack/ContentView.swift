@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct ContentView: View {
+    static let container = PersistenceController.shared.container
+    let context = container.viewContext
+    
     var body: some View {
-        UserSettingForm()
+        MainContent()
+            .environment(\.managedObjectContext, context)
     }
 }
-
-    
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

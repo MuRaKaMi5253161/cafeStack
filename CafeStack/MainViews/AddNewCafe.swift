@@ -9,7 +9,8 @@ import SwiftUI
 import PhotosUI
 
 struct AddNewCafe: View {
-    @ObservedObject var cafeEntityModel : CafeEntityModel
+    @Environment(\.managedObjectContext) var viewContext
+//    @ObservedObject var CafeEntityModel : Model_cafeEntity
     @State var cafeName: String = ""
     @State var exp: String = ""
     @State var isOn = false
@@ -33,9 +34,7 @@ struct AddNewCafe: View {
         //config.selection = .ordered
         return config
     }
-    
-    @Environment(\.managedObjectContext) var viewContext
-    @Environment(\.presentationMode) var presentationMode
+
     
     fileprivate func save() {
         do {
@@ -45,6 +44,9 @@ struct AddNewCafe: View {
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
     }
+    
+    @Environment(\.presentationMode) var presentationMode
+    
     fileprivate func ExistHalfStar() {
         self.halfStarCount = 1
     }
@@ -75,51 +77,51 @@ struct AddNewCafe: View {
                 .frame(width: bounds.width)
                 .listRowSeparator(.hidden)
                 
-                switch images.count {
-                    //1枚の場合
-                case 1:
-                    HStack {
-                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 150, height:150, alignment: .center)
-                            .border(Color.gray)
-                            .clipped()
-                        Spacer()
-                    }
-                    //選択した画像が表示された時点でCoreDataモデルに代入する
-                    .onAppear(){
-                        cafeEntityModel.image1 = images[0]
-                        cafeEntityModel.image2 = Data.init()
-                    }
-                    //2枚の場合
-                case 2:
-                    HStack{
-                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 150, height: 150, alignment: .center)
-                            .border(Color.gray)
-                            .clipped()
-                        Image(uiImage: UIImage(data: images[1]) ?? UIImage(systemName: "photo")!)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 150, height: 150, alignment: .center)
-                            .border(Color.gray)
-                            .clipped()
-                        Spacer()
-                    }.onAppear(){
-                        cafeEntityModel.image1 = images[0]
-                        cafeEntityModel.image2 = images[1]
-                    }
-                    //0枚の場合か,編集で開いたシートの場合
-                default:
-                    VStack(alignment: .center) {
-                        Text("画像がありません")
-                            .foregroundColor(.secondary)
-                            .padding()
-                    }.frame(width: bounds.width)
-                }
+//                switch images.count {
+//                    //1枚の場合
+//                case 1:
+//                    HStack {
+//                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
+//                            .resizable()
+//                            .scaledToFill()
+//                            .frame(width: 150, height:150, alignment: .center)
+//                            .border(Color.gray)
+//                            .clipped()
+//                        Spacer()
+//                    }
+//                    //選択した画像が表示された時点でCoreDataモデルに代入する
+//                    .onAppear(){
+//                        CafeEntityModel.image1 = images[0]
+//                        CafeEntityModel.image2 = Data.init()
+//                    }
+//                    //2枚の場合
+//                case 2:
+//                    HStack{
+//                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
+//                            .resizable()
+//                            .scaledToFill()
+//                            .frame(width: 150, height: 150, alignment: .center)
+//                            .border(Color.gray)
+//                            .clipped()
+//                        Image(uiImage: UIImage(data: images[1]) ?? UIImage(systemName: "photo")!)
+//                            .resizable()
+//                            .scaledToFill()
+//                            .frame(width: 150, height: 150, alignment: .center)
+//                            .border(Color.gray)
+//                            .clipped()
+//                        Spacer()
+//                    }.onAppear(){
+//                        CafeEntityModel.image1 = images[0]
+//                        CafeEntityModel.image2 = images[1]
+//                    }
+//                    //0枚の場合か,編集で開いたシートの場合
+//                default:
+//                    VStack(alignment: .center) {
+//                        Text("画像がありません")
+//                            .foregroundColor(.secondary)
+//                            .padding()
+//                    }.frame(width: bounds.width)
+//                }
                 Section(header: Text("カフェ名").foregroundColor(.secondary)) {
                     TextField("カフェ名を入力", text: $cafeName)
                 }.foregroundColor(.black)
@@ -163,16 +165,13 @@ struct AddNewCafe: View {
             }.navigationTitle("カフェを追加")
                 .navigationBarItems(trailing: Button(action: {
                     /// タスク新規登録処理
-                    let newCafe = CafeEntity(context: viewContext)
-                    newCafe.date = time
-                    newCafe.name = cafeName
-                    newCafe.score = scoreValue
-                    newCafe.exp = exp
-                    
-                    try? viewContext.save()
-                    
-                    /// 現在のViewを閉じる
-                    presentationMode.wrappedValue.dismiss()
+                    CafeEntity.create(in: self.viewContext,
+                                      cafeName: self.cafeName,
+                                      score: self.scoreValue,
+                                      exp: "カフェプロジェクト"
+                    )
+                    self.save()
+                    self.presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("保存")
                 })
@@ -181,7 +180,13 @@ struct AddNewCafe: View {
 }
 
 struct AddNewCafe_Previews: PreviewProvider {
+    static let container = PersistenceController.shared.container
+    static let context = container.viewContext
+    
     static var previews: some View {
-        AddNewCafe(cafeEntityModel: CafeEntityModel()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+//        AddNewCafe(CafeEntityModel: Model_cafeEntity()).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        
+        AddNewCafe()
+            .environment(\.managedObjectContext, context)
     }
 }
