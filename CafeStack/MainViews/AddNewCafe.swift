@@ -77,51 +77,47 @@ struct AddNewCafe: View {
                 .frame(width: bounds.width)
                 .listRowSeparator(.hidden)
                 
-//                switch images.count {
-//                    //1枚の場合
-//                case 1:
-//                    HStack {
-//                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
-//                            .resizable()
-//                            .scaledToFill()
-//                            .frame(width: 150, height:150, alignment: .center)
-//                            .border(Color.gray)
-//                            .clipped()
-//                        Spacer()
-//                    }
-//                    //選択した画像が表示された時点でCoreDataモデルに代入する
-//                    .onAppear(){
-//                        CafeEntityModel.image1 = images[0]
-//                        CafeEntityModel.image2 = Data.init()
-//                    }
-//                    //2枚の場合
-//                case 2:
-//                    HStack{
-//                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
-//                            .resizable()
-//                            .scaledToFill()
-//                            .frame(width: 150, height: 150, alignment: .center)
-//                            .border(Color.gray)
-//                            .clipped()
-//                        Image(uiImage: UIImage(data: images[1]) ?? UIImage(systemName: "photo")!)
-//                            .resizable()
-//                            .scaledToFill()
-//                            .frame(width: 150, height: 150, alignment: .center)
-//                            .border(Color.gray)
-//                            .clipped()
-//                        Spacer()
-//                    }.onAppear(){
-//                        CafeEntityModel.image1 = images[0]
-//                        CafeEntityModel.image2 = images[1]
-//                    }
-//                    //0枚の場合か,編集で開いたシートの場合
-//                default:
-//                    VStack(alignment: .center) {
-//                        Text("画像がありません")
-//                            .foregroundColor(.secondary)
-//                            .padding()
-//                    }.frame(width: bounds.width)
-//                }
+                switch images.count {
+                    //1枚の場合
+                case 1:
+                    HStack {
+                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 150, height:150, alignment: .center)
+                            .border(Color.gray)
+                            .clipped()
+                        Spacer()
+                    }
+                    //選択した画像が表示された時点でCoreDataモデルに代入する
+                    .onAppear(){
+                    }
+                    //2枚の場合
+                case 2:
+                    HStack{
+                        Image(uiImage: UIImage(data: images[0]) ?? UIImage(systemName: "photo")!)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 150, height: 150, alignment: .center)
+                            .border(Color.gray)
+                            .clipped()
+                        Image(uiImage: UIImage(data: images[1]) ?? UIImage(systemName: "photo")!)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 150, height: 150, alignment: .center)
+                            .border(Color.gray)
+                            .clipped()
+                        Spacer()
+                    }.onAppear(){
+                    }
+                    //0枚の場合か,編集で開いたシートの場合
+                default:
+                    VStack(alignment: .center) {
+                        Text("画像がありません")
+                            .foregroundColor(.secondary)
+                            .padding()
+                    }.frame(width: bounds.width)
+                }
                 Section(header: Text("カフェ名").foregroundColor(.secondary)) {
                     TextField("カフェ名を入力", text: $cafeName)
                 }.foregroundColor(.black)
@@ -168,7 +164,8 @@ struct AddNewCafe: View {
                     CafeEntity.create(in: self.viewContext,
                                       cafeName: self.cafeName,
                                       score: self.scoreValue,
-                                      exp: "カフェプロジェクト"
+                                      exp: "カフェプロジェクト",
+                                      image: self.images[0]
                     )
                     self.save()
                     self.presentationMode.wrappedValue.dismiss()

@@ -13,30 +13,32 @@ struct CafesDetailRow: View {
     let bounds = UIScreen.main.bounds
     
     var body: some View {
-        HStack() {
-            Image(systemName: "photo")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 75, height: 75, alignment: .leading)
-                .clipped()
-                .padding()
-            if cafe.image1?.count ?? 0 != 0 {
-                Image(uiImage: UIImage(data: cafe.image1!) ?? UIImage(systemName: "photo")!)
+        ZStack {
+            HStack() {
+                Image(systemName: "photo")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 75, height: 75, alignment: .leading)
                     .clipped()
                     .padding()
+                if cafe.image1?.count ?? 0 != 0 {
+                    Image(uiImage: UIImage(data: cafe.image1!) ?? UIImage(systemName: "photo")!)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 75, height: 75, alignment: .leading)
+                        .clipped()
+                        .padding()
+                }
+                Spacer()
+                VStack(alignment: .center) {
+                    Text(self.cafe.name ?? "no Title")
+                        .padding(30)
+                }
             }
-            Spacer()
-            VStack(alignment: .center) {
-                Text(self.cafe.name ?? "no Title")
-                    .padding(30)
-            }
+            .frame(width: bounds.width / 1.1,height: 100)
+            .background(Color.baseColor1)
+            .cornerRadius(20)
         }
-        .frame(width: bounds.width / 1.1,height: 100)
-        .background(Color.baseColor1)
-        .cornerRadius(20)
             
     }
 }

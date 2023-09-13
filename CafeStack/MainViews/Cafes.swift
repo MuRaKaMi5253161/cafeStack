@@ -14,24 +14,35 @@ struct Cafes: View {
     @Environment(\.managedObjectContext) var viewContext
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \CafeEntity.date,
-                                           ascending: true)],
+                                           ascending: false)],
         animation: .default)
     var cafeList: FetchedResults<CafeEntity>
     let bounds = UIScreen.main.bounds
+
     
     var body: some View {
         NavigationView {
             ZStack {
                 VStack {
-                    List {
-                        ForEach(cafeList) { cafe in
-                            CafesDetailRow(cafe: cafe)
-                                .environment(\.managedObjectContext, self.viewContext)
+                    if(cafeList != nil) {
+                        Text("カフェを登録しよう")
+                            .fontWeight(.semibold)
+                            .font(.title2)
+                            .foregroundColor(Color.baseColor1)
+                            
+                    } else {
+                        List {
+                            ForEach(cafeList) { cafe in
+                                CafesDetailRow(cafe: cafe)
+                                    .environment(\.managedObjectContext, self.viewContext)
+                            }.listRowSeparator(.hidden)
                         }
+                        .scrollContentBackground(.hidden)
+                        .background(Color.white)
+                        .listStyle(PlainListStyle())
                     }
                 }
-            }.frame(width: bounds.width)
-                .background(Color.baseColor3)
+            }
         }
     }
 }
@@ -47,6 +58,10 @@ struct Cafes_Previews: PreviewProvider {
             fetchRequest: NSFetchRequest(entityName: "CafeEntity"))
         try! container.persistentStoreCoordinator.execute(request,
                                                           with: context)
+        
+        // データを追加
+//        CafeEntity.create(in: context,
+//                          cafeName : "カフェプロジェクト", score: 3.5, exp: "String")
         
         return Cafes()
             .environment(\.managedObjectContext, context)

@@ -19,6 +19,7 @@ struct UserLine: View {
                 .foregroundColor(Color.baseColor1)
             Spacer()
         }
+        .frame(height: 70)
         .padding() //上下左右に余白を開ける
         .background(Color.baseColor2)
     }

@@ -15,12 +15,14 @@ extension CafeEntity {
                        cafeName: String,
                        score: Double,
                        exp: String,
+                       image: Data,
                        time: Date? = Date()){
         let cafe = self.init(context: managedObjectContext)
         cafe.date = time
         cafe.name = cafeName
         cafe.score = score
         cafe.exp = exp
+        cafe.image1 = image
         cafe.id = UUID().uuidString
         
         do {
